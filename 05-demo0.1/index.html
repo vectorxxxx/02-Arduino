@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="#" />
+    <title>Test</title>
+</head>
+
+<body>
+    <h1>Test</h1>
+    <table border="1" width="50%" align="center">
+        <thead>
+            <tr>
+                <th>设备地址</th>
+                <th>最新数据</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div id="equipment-addr">无连接</div>
+                </td>
+                <td>
+                    <div id="equipment-data">无数据</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button id="open" onclick="operate('1')">Open the Led</button>
+    <button id="close" onclick="operate('0')">Close the Led</button>
+    <script>
+        function operate(status) {
+            var req = new XMLHttpRequest();
+            var url = status == '1' ? '/open' : '/close';
+            req.open('GET', url);
+            req.send();
+        }
+
+        setInterval(function () {
+            var req = new XMLHttpRequest();
+            req.open('GET', '/data');
+            req.onload = function callback() {
+                var result = req.response;
+                var obj = JSON.parse(result);
+                document.getElementById('equipment-addr').textContent = obj.addr;
+                document.getElementById('equipment-data').textContent = obj.data;
+            };
+            req.send();
+        }, 1000);
+    </script>
+</body>
+
+</html>
